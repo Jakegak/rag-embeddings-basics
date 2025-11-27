@@ -31,7 +31,8 @@ class LLMBackend(ABC):
 class OpenAIBackend(LLMBackend):
     def __init__(self, model: str = "gpt-4o-mini", api_key: str | None = None):
         cfg = _load_yaml()
-        model = model or cfg.get("llm_model", {}).get("openai", "gpt-4o-mini").get("model", "gpt-4o-mini")
+        openai_cfg = cfg.get("llm_backends", {}).get("openai", {})
+        model = model or openai_cfg.get("model", "gpt-4o-mini")
 
         api_key = api_key or os.getenv("OPENAI_API_KEY")
         if not api_key:
@@ -54,9 +55,21 @@ class OpenAIBackend(LLMBackend):
 class OllamaBackend(LLMBackend):
     def __init__(self, model: str | None = None, url: str | None = None):
         cfg = _load_yaml()
-        default = cfg.get("llm_backends", {}).get("ollama", {})
-        self.model = model or os.getenv("OLLAMA_MODEL", "llama3")
-        self.url = url or os.getenv("OLLAMA_URL", "http://localhost:11434/api/chat")
+        ollama_cfg = cfg.get("llm_backends", {}).get("ollama", {})
+
+        # Priority: explicit arg > env var > config > hard-coded default
+        self.model = (
+            model
+            or os.getenv("OLLAMA_MODEL")
+            or ollama_cfg.get("model")
+            or "llama3"
+        )
+        self.url = (
+            url
+            or os.getenv("OLLAMA_URL")
+            or ollama_cfg.get("url")
+            or "http://localhost:11434/api/chat"
+        )
 
     def generate(self, prompt: str) -> str:
         payload = {
