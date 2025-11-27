@@ -1,7 +1,7 @@
 from  __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 
 import faiss
 import numpy as np
@@ -61,7 +61,7 @@ def build_index(documents: List[str], embed_model: str) -> Tuple[SentenceTransfo
     index.add(embeddings)
     return model, index
 
-def build_rag_state(config: RAGConfig | None = None) -> RAGState:
+def build_rag_state(config: Optional[RAGConfig] = None) -> RAGState:
     if config is None:
         config = load_config_from_yaml()
 
