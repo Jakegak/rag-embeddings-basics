@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from abc import ABC, abstractmethod
+from typing import Optional
 
 import requests
 from openai import OpenAI
@@ -29,7 +30,7 @@ class LLMBackend(ABC):
 
 
 class OpenAIBackend(LLMBackend):
-    def __init__(self, model: str = "gpt-4o-mini", api_key: str | None = None):
+    def __init__(self, model: str = "gpt-4o-mini", api_key: Optional[str] = None):
         cfg = _load_yaml()
         openai_cfg = cfg.get("llm_backends", {}).get("openai", {})
         model = model or openai_cfg.get("model", "gpt-4o-mini")
@@ -53,7 +54,7 @@ class OpenAIBackend(LLMBackend):
 
 
 class OllamaBackend(LLMBackend):
-    def __init__(self, model: str | None = None, url: str | None = None):
+    def __init__(self, model: Optional[str] = None, url: Optional[str] = None):
         cfg = _load_yaml()
         ollama_cfg = cfg.get("llm_backends", {}).get("ollama", {})
 
