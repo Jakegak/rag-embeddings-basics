@@ -1,6 +1,10 @@
 import os
 import math
 from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # 1. Set up client (Reads API key from environment variable OPENAI_API_KEY)
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))

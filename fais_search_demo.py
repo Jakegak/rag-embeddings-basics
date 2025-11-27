@@ -1,6 +1,10 @@
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 #1. Load pre-trained sentence transformer model
 model = SentenceTransformer('all-MiniLM-L6-v2')
